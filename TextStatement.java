@@ -1,22 +1,20 @@
 import java.util.Enumeration;
 
 class TextStatement extends Statement {
+    private String resultPrefixTemplate = "Rental Record for %s\n";
+    private String eachRentalTemplate = "\t%s\t%d\n";
+    private String resultSuffixTemplate = "Amount owed is %d\nYou earned %d frequent renter points";
+
     public String value(Customer aCustomer) {
         Enumeration rentals = aCustomer.getRentals();
-        String result = "Rental Record for " + aCustomer.getName() +
-                "\n";
+        String result = String.format(resultPrefixTemplate, aCustomer.getName());
         while (rentals.hasMoreElements()) {
             Rental each = (Rental) rentals.nextElement();
-            //show figures for this rental
-            result += "\t" + each.getMovie().getTitle()+ "\t" +
-                    String.valueOf(each.getCharge()) + "\n";
+            //show figures for each rental
+            result += String.format(eachRentalTemplate, each.getMovie().getTitle(), each.getCharge());
         }
         //add footer lines
-        result += "Amount owed is " +
-                String.valueOf(aCustomer.getTotalCharge()) + "\n";
-        result += "You earned " +
-                String.valueOf(aCustomer.getTotalFrequentRenterPoints()) +
-                " frequent renter points";
+        result += String.format(resultSuffixTemplate, aCustomer.getTotalCharge(), aCustomer.getTotalFrequentRenterPoints());
         return result;
     }
 }
